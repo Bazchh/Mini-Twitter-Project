@@ -1,5 +1,5 @@
 from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.authentication import SessionAuthentication
 from core.serializers.profile_serializer import UserProfileSerializer
@@ -10,18 +10,22 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework import status
 from core.repositories.profile_repository import UserProfileRepository
 
-
 class UserProfilePagination(LimitOffsetPagination):
     default_limit = 10
     max_limit = 100
 
 class UserProfileViewSet(viewsets.ViewSet):
     authentication_classes = [SessionAuthentication, JWTAuthentication]
-    permission_classes = [IsAuthenticated]
     serializer_class = UserProfileSerializer
     pagination_class = UserProfilePagination
+    permission_classes = [IsAuthenticated]
     
-    
+    def get_permissions(self):
+        
+        if self.action == 'list' or self.action == 'retrieve':
+            return [AllowAny()]  
+        return [IsAuthenticated()]  
+
     def list(self, request):
         try:
             paginator = self.pagination_class()
@@ -44,11 +48,8 @@ class UserProfileViewSet(viewsets.ViewSet):
         serializer = UserProfileSerializer(data=request.data)
         if serializer.is_valid():
             try:
-                # Associa o perfil ao usuário autenticado
                 validated_data = serializer.validated_data
-                # Adiciona o usuário autenticado ao dicionário de dados validados
                 validated_data['user'] = request.user
-                # Cria o perfil com os dados validados, incluindo o usuário
                 profile = UserProfileService.create_profile(validated_data)
                 response_serializer = UserProfileSerializer(profile)
                 return Response(response_serializer.data, status=status.HTTP_201_CREATED)
@@ -56,13 +57,11 @@ class UserProfileViewSet(viewsets.ViewSet):
                 return Response({'detail': str(e)}, status=e.status_code)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
     def update(self, request):
-        logged_user = request.user  # O usuário autenticado
-        validated_data = request.data  # Dados que serão validados
+        logged_user = request.user  
+        validated_data = request.data
         profile = UserProfileRepository.update_profile(logged_user, validated_data)
         return Response(UserProfileSerializer(profile).data)
-
 
     def destroy(self, request, pk=None):
         try:
