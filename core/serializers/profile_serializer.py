@@ -3,7 +3,7 @@ from core.models.profile_model import UserProfile
 from core.models.user_model import User
 
 class UserProfileSerializer(serializers.ModelSerializer):
-    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())  # O ID do user já será o ID do profile
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())  
 
     class Meta:
         model = UserProfile
