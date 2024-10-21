@@ -9,7 +9,9 @@
 ### 2. Activate the Virtual Environment:
 
 ```bash
-  source venv/bin/activate
+  source venv/bin/activate # linux
+  source venv/Scripts/activate # windows
+
 ```
 
 ### 3. Install Dependencies from requirements.txt:
