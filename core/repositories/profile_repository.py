@@ -1,7 +1,8 @@
 from django.core.exceptions import ObjectDoesNotExist
 from core.models.profile_model import UserProfile
 from core.shared.customAPIException import CustomAPIException
-from core.repositories.user_repository import UserRepository
+from core.models.user_model import User
+
 class UserProfileRepository:
     @staticmethod
     def get_all_profiles():
@@ -58,17 +59,19 @@ class UserProfileRepository:
         except Exception as e:
             raise CustomAPIException(detail="Error updating profile: " + str(e), status_code=400)
 
+
     @staticmethod
     def delete_user(logged_user, user_id):
-        if logged_user.id != user_id:
+        if logged_user.id != user_id:  
             raise CustomAPIException(detail="You do not have permission to delete this user.", status_code=403)
-        
+
         try:
-            user = UserRepository.get_user_by_id(user_id)
-            user.status = 'inactive'  # Marca o usuário como inativo
+            user = User.objects.get(id=user_id)
+            user.status = 'inactive' 
             user.save()
         except ObjectDoesNotExist:
             raise CustomAPIException(detail="User not found.", status_code=404)
         except Exception as e:
             raise CustomAPIException(detail="Error deleting user: " + str(e), status_code=400)
+
 
