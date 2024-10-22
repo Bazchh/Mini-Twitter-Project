@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
 from core.models.managers import CustomUserManager
 from .base_model import BaseModel
+
 from core.validators.user_validator import (
     cpf_regex_validator, 
     cpf_min_length_validator, 
