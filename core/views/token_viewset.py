@@ -18,7 +18,6 @@ class CustomTokenPairView(TokenObtainPairView):
             'name': user.name,
             'email': user.email,
             'status': 'active' if user.is_active else 'inactive',
-            'university': user.university.name if hasattr(user, 'university') and user.university else None,
             'access': str(token),
             'refresh': str(refresh_token),
         }
