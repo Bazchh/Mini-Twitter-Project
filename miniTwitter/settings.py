@@ -1,7 +1,8 @@
 import os
 from pathlib import Path
-from decouple import config, Csv
+from decouple import config
 import warnings
+from datetime import timedelta
 
 
 
@@ -106,6 +107,10 @@ SPECTACULAR_SETTINGS = {
     'SCHEMA_COERCE_PARAMETERS': True,  # Coercionar parâmetros para tipos corretos
 }
 
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(weeks=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(weeks=4),
+}
 
 AUTH_USER_MODEL = 'core.User'
 
@@ -176,7 +181,7 @@ LOGGING = {
     },
 }
 
-
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 1000
 
 # Internationalization
 LANGUAGE_CODE = 'pt-br'
