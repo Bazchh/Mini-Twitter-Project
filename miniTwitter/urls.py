@@ -21,8 +21,8 @@ urlpatterns = [
     path('swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('api/token/', CustomTokenPairView.as_view(), name='token_obtain_pair'),
         
-    path('likes/<int:pk>/like/', PostViewSet.as_view({'post': 'like'}), name='post-like'),
-    path('likes/<int:pk>/likes/', PostViewSet.as_view({'get': 'get_likes'}), name='post-get-likes')
+    path('likes/<uuid:pk>/like/', PostViewSet.as_view({'post': 'like'}), name='post-like'),
+    path('likes/<uuid:pk>/likes/', PostViewSet.as_view({'get': 'get_likes'}), name='post-get-likes')
 ]
 
 if settings.DEBUG:
