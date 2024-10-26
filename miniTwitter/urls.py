@@ -10,6 +10,7 @@ from core.views.profile_viewset import UserProfileViewSet
 from core.views.post_viewset import PostViewSet
 from core.views.user_following_viewset import UserFollowingViewSet
 from core.views.follow_request_viewset import FollowRequestViewSet
+from core.views.feed_viewset import FeedViewSet
 
 router = DefaultRouter()
 router.register(r'users', UserViewSet, basename='user')
@@ -34,7 +35,9 @@ urlpatterns = [
     path('followings/followers/', UserFollowingViewSet.as_view({'get': 'list_followers'}), name='list-followers'),
     path('followings/remove-follower/<uuid:follower_id>/', UserFollowingViewSet.as_view({'delete': 'remove_follower'}), name='remove-follower'),
     path('followings/unfollow/<uuid:followed_id>/', UserFollowingViewSet.as_view({'delete': 'unfollow_user'}), name='unfollow-user'),
-    path('followings/non_friends/', UserFollowingViewSet.as_view({'get': 'list_non_friends'}), name='list-non-friends')
+    path('followings/non_friends/', UserFollowingViewSet.as_view({'get': 'list_non_friends'}), name='list-non-friends'),
+    
+    path('feed/', FeedViewSet.as_view({'get': 'list'}), name='feed')
     ]
 
 if settings.DEBUG:
