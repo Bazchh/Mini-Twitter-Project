@@ -54,11 +54,14 @@ class PostService:
             raise CustomAPIException(detail="Failed to delete post: " + str(e), status_code=400)
 
     @staticmethod
-    def like_post(post_id):
+    def like_post(post_id, user_id):
         try:
-            return PostRepository.like_post(post_id)
+            return PostRepository.like_post(post_id=post_id, user_id=user_id)  # Passa o user_id para o repositório
+        except CustomAPIException as e:
+            raise e
         except Exception as e:
             raise CustomAPIException(detail="Failed to like post: " + str(e), status_code=400)
+
 
     @staticmethod
     def get_post_likes(post_id):

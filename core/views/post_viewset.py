@@ -83,8 +83,10 @@ class PostViewSet(viewsets.ViewSet):
 
     def like(self, request, pk=None):
         try:
-            post = PostService.like_post(post_id=pk)
-            return Response({"likes": post.likes}, status=status.HTTP_200_OK)
+            likes_count = PostService.like_post(post_id=pk, user_id=request.user.id)
+            return Response({"likes": likes_count}, status=status.HTTP_200_OK)
+        except CustomAPIException as e:
+            return Response({"detail": e.detail}, status=e.status_code)
         except Exception as e:
             return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
