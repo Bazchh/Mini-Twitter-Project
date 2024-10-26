@@ -9,6 +9,10 @@ from rest_framework.authentication import SessionAuthentication
 from rest_framework.decorators import action
 from core.services.user_following_service import UserFollowingService
 from core.models.follow_request import FollowRequest
+from rest_framework.pagination import PageNumberPagination 
+
+class FollowRequestPagination(PageNumberPagination):
+    page_size = 10  
 
 class FollowRequestViewSet(viewsets.ViewSet):
     authentication_classes = [SessionAuthentication, JWTAuthentication]
@@ -18,8 +22,13 @@ class FollowRequestViewSet(viewsets.ViewSet):
     
     def list(self, request):
         follow_requests = FollowRequestService.list_all_follow_requests_for_user(request.user.id)
-        serializer = FollowRequestSerializer(follow_requests, many=True)
-        return Response(serializer.data)
+        paginator = FollowRequestPagination()
+        
+        paginated_follow_requests = paginator.paginate_queryset(follow_requests, request)
+        
+        serializer = FollowRequestSerializer(paginated_follow_requests, many=True)
+        
+        return paginator.get_paginated_response(serializer.data)
 
     def retrieve(self, pk=None):
         try:
@@ -50,7 +59,6 @@ class FollowRequestViewSet(viewsets.ViewSet):
 
         except CustomAPIException as e:
             return Response({"detail": str(e)}, status=e.status_code)
-
 
     @action(detail=True, methods=['patch'], url_path='handle/(?P<action>accept|reject)')
     def handle_request(self, request, pk=None, action=None):

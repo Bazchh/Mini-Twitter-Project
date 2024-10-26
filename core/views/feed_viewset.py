@@ -1,8 +1,11 @@
 from rest_framework import viewsets, permissions
-from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
 from core.models.post_model import Post
 from core.models.user_following_model import UserFollowing
 from core.serializers.post_serializer import PostSerializer
+
+class FeedPagination(PageNumberPagination):
+    page_size = 10 
 
 class FeedViewSet(viewsets.ViewSet):
     permission_classes = [permissions.IsAuthenticated]  
@@ -14,6 +17,9 @@ class FeedViewSet(viewsets.ViewSet):
 
         posts = Post.objects.filter(user__id__in=followed_users).order_by('-created_at')
 
-        serializer = PostSerializer(posts, many=True)
-
-        return Response(serializer.data)
+        paginator = FeedPagination()
+        paginated_posts = paginator.paginate_queryset(posts, request)
+        
+        serializer = PostSerializer(paginated_posts, many=True)
+        
+        return paginator.get_paginated_response(serializer.data)

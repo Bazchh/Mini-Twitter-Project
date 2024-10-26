@@ -8,6 +8,10 @@ from rest_framework.authentication import SessionAuthentication
 from drf_spectacular.utils import extend_schema
 from core.models.post_model import Post
 from core.shared.customAPIException import CustomAPIException
+from rest_framework.pagination import PageNumberPagination 
+
+class PostPagination(PageNumberPagination):
+    page_size = 10  
 
 class PostViewSet(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
@@ -18,7 +22,6 @@ class PostViewSet(viewsets.ViewSet):
         responses={201: PostSerializer},
         description="Create a new post with an optional image.",
     )
-    
     def create(self, request):
         serializer = PostSerializer(data=request.data)
         if serializer.is_valid():
@@ -41,13 +44,12 @@ class PostViewSet(viewsets.ViewSet):
             return Response(PostSerializer(post).data, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"detail": str(e)}, status=status.HTTP_404_NOT_FOUND)
-    
+
     @extend_schema(
         request=PostSerializer,
         responses={200: PostSerializer, 400: 'Invalid data', 404: 'Post not found'},
         description="Update an existing post. All fields are optional, but title and text are required."
     )
-    
     def update(self, request, pk=None):
         try:
             post = Post.objects.get(id=pk) 
@@ -73,7 +75,6 @@ class PostViewSet(viewsets.ViewSet):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
     def destroy(self, request, pk=None):
         try:
             PostService.delete_post(user_id=request.user.id, post_id=pk)
@@ -96,3 +97,12 @@ class PostViewSet(viewsets.ViewSet):
             return Response({"likes": likes_count}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"detail": str(e)}, status=status.HTTP_404_NOT_FOUND)
+
+    def list(self, request):
+        posts = Post.objects.all().order_by('-created_at')  
+        paginator = PostPagination()
+
+        paginated_posts = paginator.paginate_queryset(posts, request)
+        serializer = PostSerializer(paginated_posts, many=True)
+        
+        return paginator.get_paginated_response(serializer.data)
