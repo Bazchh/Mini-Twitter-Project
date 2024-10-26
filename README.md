@@ -38,8 +38,3 @@
   python manage.py runserver
 ```
 
-### 7. Run tests application
-
-```bash
-  pytest
-```
