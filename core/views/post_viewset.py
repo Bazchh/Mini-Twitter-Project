@@ -7,7 +7,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.authentication import SessionAuthentication
 from drf_spectacular.utils import extend_schema
 from core.models.post_model import Post
-from core.shared.customAPIException import CustomAPIException
+from core.shared.custom_api_exception import CustomAPIException
 from rest_framework.pagination import PageNumberPagination 
 
 class PostPagination(PageNumberPagination):

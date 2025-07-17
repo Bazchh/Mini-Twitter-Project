@@ -4,7 +4,7 @@ from core.serializers.user_serializer import UserSerializer
 from core.models.user_model import User
 from rest_framework.pagination import LimitOffsetPagination
 from core.services.user_services import UserService
-from core.shared.customAPIException import CustomAPIException
+from core.shared.custom_api_exception import CustomAPIException
 
 
 class UserPagination(LimitOffsetPagination):

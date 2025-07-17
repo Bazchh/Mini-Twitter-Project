@@ -65,4 +65,3 @@ class FollowRequest(BaseModel):
 
         self.status = self.REJECTED
         self.save()
-        

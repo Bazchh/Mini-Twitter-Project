@@ -2,7 +2,7 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from core.services.follow_request_service import FollowRequestService
 from core.serializers.follow_request_serializer import FollowRequestSerializer
-from core.shared.customAPIException import CustomAPIException
+from core.shared.custom_api_exception import CustomAPIException
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.authentication import SessionAuthentication 

@@ -4,7 +4,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.authentication import SessionAuthentication
 from core.serializers.profile_serializer import UserProfileSerializer
 from core.services.profile_service import UserProfileService
-from core.shared.customAPIException import CustomAPIException
+from core.shared.custom_api_exception import CustomAPIException
 from rest_framework.response import Response
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework import status
