@@ -1,0 +1,21 @@
+# Define a imagem Docker que será usada. Python 3.9 é uma escolha segura.
+image: python:3.9
+
+# Define as etapas (stages) do nosso pipeline.
+# Por enquanto, teremos apenas a etapa de teste.
+stages:
+  - test
+
+# Antes de executar os scripts de cada job, vamos definir um comando
+# para instalar as dependências. Isso evita repetição.
+before_script:
+  - pip install -r requirements.txt
+
+# Este é o nosso primeiro "job" (tarefa).
+# Ele pertence à etapa "test".
+test_django_app:
+  stage: test
+  script:
+    # O comando para rodar os testes do Django.
+    # Ele vai procurar por testes dentro dos seus apps (como o 'core').
+    - python manage.py test
